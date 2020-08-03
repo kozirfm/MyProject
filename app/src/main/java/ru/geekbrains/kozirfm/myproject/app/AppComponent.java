@@ -10,6 +10,6 @@ import ru.geekbrains.kozirfm.myproject.presenter.MainPresenter;
 @Component(modules = AppModule.class)
 public interface AppComponent {
 
-    void inject (MainPresenter mainPresenter);
+    void inject(MainPresenter mainPresenter);
 
 }
