@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "245621149012",
+    "firebase_url": "https://garden-279613.firebaseio.com",
+    "project_id": "secure-garden-279613",
+    "storage_bucket": "secure-garden-279613.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245621149012:android:d8457906c944ff91a04cc1",
+        "android_client_info": {
+          "package_name": "ru.geekbrains.kozirfm.myproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "245621149012-cnr4nma4fa9mv936rp28biaeg0422ocg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1hYcy0xm7m6GBb7SEWDoFlqO9HJEPnHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "245621149012-cnr4nma4fa9mv936rp28biaeg0422ocg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

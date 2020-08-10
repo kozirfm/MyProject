@@ -5,12 +5,14 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.geekbrains.kozirfm.myproject.R;
-import ru.geekbrains.kozirfm.myproject.model.data.Photos;
+import ru.geekbrains.kozirfm.myproject.model.data.Hit;
 import ru.geekbrains.kozirfm.myproject.presenter.MainPresenter;
 
 public class MainActivity extends MvpAppCompatActivity implements MainView {
@@ -31,8 +33,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
     }
 
     @Override
-    public void initRecyclerView(Photos photos) {
+    public void initRecyclerView(List<Hit> hits) {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setAdapter(new MyAdapter(this, photos));
+        recyclerView.setAdapter(new MyAdapter(hits));
     }
 }

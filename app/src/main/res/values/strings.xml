@@ -3,4 +3,5 @@
     <string name="set_text">set text</string>
     <string name="recycler_item">Recycler item</string>
     <string name="hello">Hello</string>
+    <string name="image">image</string>
 </resources>

@@ -25,7 +25,7 @@ public class App extends Application {
         return appComponent;
     }
 
-    private AppDatabase generateAppDatabase(){
+    private AppDatabase generateAppDatabase() {
         return Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "room_database")
                 .build();

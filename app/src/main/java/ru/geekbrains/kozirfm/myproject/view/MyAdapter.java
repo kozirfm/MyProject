@@ -2,7 +2,6 @@ package ru.geekbrains.kozirfm.myproject.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,22 +10,29 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.geekbrains.kozirfm.myproject.R;
-import ru.geekbrains.kozirfm.myproject.model.data.Photos;
+import ru.geekbrains.kozirfm.myproject.app.App;
+import ru.geekbrains.kozirfm.myproject.model.Constants;
+import ru.geekbrains.kozirfm.myproject.model.GlideLoader;
+import ru.geekbrains.kozirfm.myproject.model.data.Hit;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Constants {
 
-    private Context context;
 
-    private Photos photos;
+    @Inject
+    GlideLoader glideLoader;
 
-    public MyAdapter(Context context, Photos photos) {
-        this.context = context;
-        this.photos = photos;
+    List<Hit> hits;
+
+    public MyAdapter(List<Hit> hits) {
+        App.getAppComponent().inject(this);
+        this.hits = hits;
     }
 
     @NonNull
@@ -38,17 +44,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Glide.with(context)
-                .load(photos.hits.get(position).webformatURL)
-                .into(holder.imageView);
+        glideLoader.loadPhoto(holder.imageView.getContext(),
+                hits.get(position).previewURL,
+                holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return photos.hits.size();
+        return hits.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder  {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.recyclerViewItem)
         ImageView imageView;
@@ -56,15 +62,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            imageView.setOnClickListener((v -> {
-                Intent intent = new Intent(context, SecondActivity.class);
-                context.startActivity(intent);
-            }));
+            imageView.setOnClickListener((this::startActivity));
         }
 
-        private void startActivity() {
-
-            Log.d("CLICK", "Click" + " " + getAdapterPosition());
+        private void startActivity(View v) {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra(ADAPTER_POSITION, getAdapterPosition());
+            context.startActivity(intent);
         }
 
     }

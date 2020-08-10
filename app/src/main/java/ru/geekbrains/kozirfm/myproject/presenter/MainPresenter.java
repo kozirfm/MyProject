@@ -13,7 +13,6 @@ import ru.geekbrains.kozirfm.myproject.app.App;
 import ru.geekbrains.kozirfm.myproject.model.Model;
 import ru.geekbrains.kozirfm.myproject.model.RetrofitApi;
 import ru.geekbrains.kozirfm.myproject.model.data.Hit;
-import ru.geekbrains.kozirfm.myproject.model.data.Photos;
 import ru.geekbrains.kozirfm.myproject.model.db.PhotosDao;
 import ru.geekbrains.kozirfm.myproject.view.MainView;
 
@@ -27,9 +26,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
     RetrofitApi api;
 
     @Inject
-    Photos photos;
-
-    @Inject
     PhotosDao photosDao;
 
     public MainPresenter() {
@@ -39,25 +35,34 @@ public class MainPresenter extends MvpPresenter<MainView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getListUrl();
+        getDataFromRoom();
     }
 
     public void getListUrl() {
-        if (photos.hits == null) {
-            Disposable disposable = api.requestServer().subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photos -> {
-                        this.photos = photos;
-                        getViewState().initRecyclerView(photos);
-                        putData(photos.hits);
-                    }, Throwable::printStackTrace);
-        }
+        Disposable disposable = api.requestServer().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photos -> {
+                    getViewState().initRecyclerView(photos.hits);
+                    putDataToRoom(photos.hits);
+                }, Throwable::printStackTrace);
 
     }
 
-    private void putData(List<Hit> photos) {
-        Disposable disposable = photosDao.insert(photos).subscribeOn(Schedulers.io())
+    private void putDataToRoom(List<Hit> hits) {
+        Disposable disposable = photosDao.insert(hits).subscribeOn(Schedulers.io())
                 .subscribe();
+    }
+
+    private void getDataFromRoom() {
+        Disposable disposable = photosDao.getAll().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(hits -> {
+                    if (hits.isEmpty()) {
+                        getListUrl();
+                    } else {
+                        getViewState().initRecyclerView(hits);
+                    }
+                }, Throwable::printStackTrace);
     }
 
 }
