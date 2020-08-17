@@ -9,7 +9,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.geekbrains.kozirfm.myproject.model.data.Photos;
 
-public class RetrofitApi {
+public class RetrofitApi implements Constants{
 
     public Single<Photos> requestServer() {
 
@@ -24,7 +24,7 @@ public class RetrofitApi {
                 .build()
                 .create(RetrofitService.class);
 
-        return api.getPhoto("9250926-552b631cddef606bad3e807d2");
+        return api.getPhoto(PIXABAY_API_KEY);
 
     }
 

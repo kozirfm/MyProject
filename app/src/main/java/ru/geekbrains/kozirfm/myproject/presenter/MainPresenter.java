@@ -1,7 +1,5 @@
 package ru.geekbrains.kozirfm.myproject.presenter;
 
-import android.util.Log;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,7 +13,6 @@ import ru.geekbrains.kozirfm.myproject.app.App;
 import ru.geekbrains.kozirfm.myproject.model.Model;
 import ru.geekbrains.kozirfm.myproject.model.RetrofitApi;
 import ru.geekbrains.kozirfm.myproject.model.data.Hit;
-import ru.geekbrains.kozirfm.myproject.model.data.Photos;
 import ru.geekbrains.kozirfm.myproject.model.db.PhotosDao;
 import ru.geekbrains.kozirfm.myproject.view.MainView;
 
@@ -29,9 +26,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
     RetrofitApi api;
 
     @Inject
-    Photos photos;
-
-    @Inject
     PhotosDao photosDao;
 
     public MainPresenter() {
@@ -41,46 +35,38 @@ public class MainPresenter extends MvpPresenter<MainView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getUrlString();
+        getDataFromRoom();
     }
 
-    private void incrementNum() {
-        if (model.getNum() == 19) {
-            model.setNum(0);
-            return;
-        }
-        model.setNum(model.getNum() + 1);
-    }
-
-
-    public void getUrlString() {
-        if (photos.hits == null) {
-            Disposable disposable = api.requestServer().subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photos -> {
-                        this.photos = photos;
-                        Log.d("HITS", photos.hits.toString());
-                        putData(photos.hits);
-                        setView();
-                    }, throwable -> {
-                        getViewState().setText("Error");
-                    });
-            return;
-        }
-
-        setView();
+    public void getListUrl() {
+        Disposable disposable = api.requestServer().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(photos -> {
+                    getViewState().initRecyclerView(photos.hits);
+                    putDataToRoom(photos.hits);
+                }, Throwable::printStackTrace);
 
     }
 
-    private void setView(){
-        getViewState().setImage(photos.hits.get(model.getNum()).webformatURL);
-        getViewState().setText(photos.hits.get(model.getNum()).downloads);
-        incrementNum();
-    }
-
-    private void putData(List<Hit> photos){
-        Disposable disposable = photosDao.insert(photos).subscribeOn(Schedulers.io())
+    private void putDataToRoom(List<Hit> hits) {
+        Disposable disposable = photosDao.insert(hits).subscribeOn(Schedulers.io())
                 .subscribe();
+    }
+
+    private void getDataFromRoom() {
+        Disposable disposable = photosDao.getAll().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(hits -> {
+                    if (hits.isEmpty()) {
+                        getListUrl();
+                    } else {
+                        getViewState().initRecyclerView(hits);
+                    }
+                }, Throwable::printStackTrace);
+    }
+
+    public void setAdapterPosition(int position) {
+        model.setNum(position);
     }
 
 }

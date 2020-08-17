@@ -1,28 +1,28 @@
 package ru.geekbrains.kozirfm.myproject.view;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import moxy.MvpAppCompatActivity;
 import moxy.presenter.InjectPresenter;
 import ru.geekbrains.kozirfm.myproject.R;
+import ru.geekbrains.kozirfm.myproject.model.data.Hit;
 import ru.geekbrains.kozirfm.myproject.presenter.MainPresenter;
 
-public class MainActivity extends MvpAppCompatActivity implements MainView {
-
-    @BindView(R.id.textView)
-    TextView textView;
-    @BindView(R.id.imageView)
-    ImageView imageView;
+public class MainActivity extends MvpAppCompatActivity implements MainView, OnClickItemHolder {
 
     @InjectPresenter
     MainPresenter mainPresenter;
+
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +33,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainView {
 
     }
 
-    @OnClick(R.id.button)
-    public void onClickButton() {
-        mainPresenter.getUrlString();
+    @Override
+    public void initRecyclerView(List<Hit> hits) {
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setAdapter(new MyAdapter(hits, this));
     }
 
     @Override
-    public void setText(String s) {
-        textView.setText(s);
+    public void startDetailActivity(int position) {
+        mainPresenter.setAdapterPosition(position);
+        Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+        startActivity(intent);
     }
-
-    @Override
-    public void setImage(String s) {
-        Glide.with(this)
-                .load(s)
-                .into(imageView);
-    }
-
 }

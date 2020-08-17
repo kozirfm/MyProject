@@ -15,6 +15,6 @@ public class Hit {
     public String webformatURL;
 
     @Expose
-    public String downloads;
+    public String previewURL;
 
 }
