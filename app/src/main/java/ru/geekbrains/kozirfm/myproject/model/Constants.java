@@ -2,7 +2,6 @@ package ru.geekbrains.kozirfm.myproject.model;
 
 public interface Constants {
 
-    String ADAPTER_POSITION = "ADAPTER_POSITION";
-    String PIXABAY_API_KEY = "add your api key";
+    String PIXABAY_API_KEY = "17874894-61389891cb92e0d437f68dd90";
 
 }

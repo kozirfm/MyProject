@@ -65,4 +65,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 }, Throwable::printStackTrace);
     }
 
+    public void setAdapterPosition(int position) {
+        model.setNum(position);
+    }
+
 }

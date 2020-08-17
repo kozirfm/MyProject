@@ -5,8 +5,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
-import java.util.Objects;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -39,7 +37,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailView, 
 
         ButterKnife.bind(this);
 
-        detailPresenter.getUrlPhoto(Objects.requireNonNull(getIntent().getExtras()).getInt(ADAPTER_POSITION));
+        detailPresenter.getUrlPhoto();
 
     }
 

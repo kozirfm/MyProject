@@ -1,7 +1,5 @@
 package ru.geekbrains.kozirfm.myproject.view;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +26,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
     @Inject
     GlideLoader glideLoader;
 
+    OnClickItemHolder onClickItemHolder;
+
     List<Hit> hits;
 
-    public MyAdapter(List<Hit> hits) {
+    public MyAdapter(List<Hit> hits, OnClickItemHolder onClickItemHolder) {
         App.getAppComponent().inject(this);
         this.hits = hits;
+        this.onClickItemHolder = onClickItemHolder;
     }
 
     @NonNull
@@ -59,17 +60,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         @BindView(R.id.recyclerViewItem)
         ImageView imageView;
 
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            imageView.setOnClickListener((this::startActivity));
-        }
-
-        private void startActivity(View v) {
-            Context context = v.getContext();
-            Intent intent = new Intent(context, DetailActivity.class);
-            intent.putExtra(ADAPTER_POSITION, getAdapterPosition());
-            context.startActivity(intent);
+            imageView.setOnClickListener(v -> onClickItemHolder.startDetailActivity(getAdapterPosition()));
         }
 
     }
